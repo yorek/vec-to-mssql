@@ -27,8 +27,10 @@ internal class Program
     private static void LoadFiles(string path, string test)
     {   
         LoadFile(LoadFVECS, Path.Combine(path,test,$"{test}_query.fvecs"), $"{test}_query", num:10000, dim:128);             
-        LoadFile(LoadIVECS, Path.Combine(path,test,$"{test}_groundtruth.ivecs"), $"{test}_groundtruth", num:10000, dim:100);
+        LoadFile(LoadFVECS, Path.Combine(path,test,$"{test}_learn.fvecs"), $"{test}_learn", num:100000, dim:128);        
         LoadFile(LoadFVECS, Path.Combine(path,test,$"{test}_base.fvecs"), $"{test}_base", num:1000000, dim:128);        
+
+        LoadFile(LoadIVECS, Path.Combine(path,test,$"{test}_groundtruth.ivecs"), $"{test}_groundtruth", num:10000, dim:100);
     }
 
     private static void LoadFile(Func<BinaryReader, int, string> FileLoader, string file, string tableName, int num, int dim)
@@ -56,7 +58,8 @@ internal class Program
 
         using FileStream fs = new(file, FileMode.Open);
         using BinaryReader br = new(fs);
-        for (int i = 0; i < num; i++)
+        int i = 1;
+        for (; i <= num; i++)
         {
             var d = br.ReadInt32();
 
@@ -67,16 +70,16 @@ internal class Program
 
             dt.Rows.Add(i, data);
 
-            if (i > 0 && i % 10000 == 0)
+            if (i % 10000 == 0)
             {
-                Console.WriteLine($"Writing {i} rows...");
+                Console.WriteLine($"Writing {dt.Rows.Count} (Total: {i} of {num}) rows...");
                 bulk.WriteToServer(dt);
                 dt.Clear();
             }
         }
         if (dt.Rows.Count > 0)
         {
-            Console.WriteLine($"Writing {dt.Rows.Count} rows...");
+            Console.WriteLine($"Writing {dt.Rows.Count} (Total: {i} of {num}) rows...");
             bulk.WriteToServer(dt);
             dt.Clear();
         }

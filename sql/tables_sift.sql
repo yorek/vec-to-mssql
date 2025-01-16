@@ -6,6 +6,14 @@ create table dbo.sift_base
 )
 go
 
+drop table if exists dbo.sift_learn;
+create table dbo.sift_learn
+(
+    id int not null primary key clustered,
+    vector vector(128) not null    
+)
+go
+
 drop table if exists dbo.sift_query;
 create table dbo.sift_query
 (
@@ -18,6 +26,6 @@ drop table if exists dbo.sift_groundtruth;
 create table dbo.sift_groundtruth
 (
     id int not null primary key clustered,
-    vector vector(128) not null    
+    vector vector(100) not null    
 )
 go
