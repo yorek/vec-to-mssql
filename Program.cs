@@ -39,7 +39,6 @@ internal class Program
         Console.WriteLine($"Reading file {file}...");
         Console.WriteLine($"num: {num}, dim: {dim}");
 
-    
         Console.WriteLine($"Connecting...");
 
         using var conn = new SqlConnection(_connectionString);
