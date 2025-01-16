@@ -13,22 +13,22 @@ internal class Program
     {
         Env.Load();
 
-        _connectionString = Environment.GetEnvironmentVariable("MSSQL") ?? "Server=localhost;Database=vectordb;TrustServerCertificate=True;Integrated Security=True;";
+        _connectionString = Environment.GetEnvironmentVariable("MSSQL") ?? "Server=localhost,31433;Database=sift;TrustServerCertificate=True;Integrated Security=True;";
     }
 
     private static void Main(string[] args)
     {
         string test = "sift";
-        string path = @"c:\Temp\vector\";
+        string path = @"C:\temp\";
 
         LoadFiles(path, test);
     }
 
     private static void LoadFiles(string path, string test)
-    {        
-        LoadFile(LoadFVECS, Path.Combine(path,test,$"{test}_base.fvecs"), $"{test}_base", num:1000000, dim:128);
-        LoadFile(LoadFVECS, Path.Combine(path,test,$"{test}_query.fvecs"), $"{test}_query", num:10000, dim:128);
+    {   
+        LoadFile(LoadFVECS, Path.Combine(path,test,$"{test}_query.fvecs"), $"{test}_query", num:10000, dim:128);             
         LoadFile(LoadIVECS, Path.Combine(path,test,$"{test}_groundtruth.ivecs"), $"{test}_groundtruth", num:10000, dim:100);
+        LoadFile(LoadFVECS, Path.Combine(path,test,$"{test}_base.fvecs"), $"{test}_base", num:1000000, dim:128);        
     }
 
     private static void LoadFile(Func<BinaryReader, int, string> FileLoader, string file, string tableName, int num, int dim)
@@ -93,7 +93,7 @@ internal class Program
         DataTable dt = new();
 
         dt.Columns.Add("id", typeof(int));
-        dt.Columns.Add("jsonvector", typeof(string));
+        dt.Columns.Add("vector", typeof(string));
 
         return dt;      
     }
