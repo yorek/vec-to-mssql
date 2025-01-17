@@ -26,6 +26,6 @@ drop table if exists dbo.sift_groundtruth;
 create table dbo.sift_groundtruth
 (
     id int not null primary key clustered,
-    vector vector(100) not null    
+    vectors json not null    
 )
 go
